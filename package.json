@@ -1,0 +1,19 @@
+{
+  "name": "matrix-hue-bot",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "repository": "https://github.com/sparkymat/matrix-hue-bot",
+  "author": "sparkymat",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.19.0",
+    "dotenv": "^8.2.0",
+    "lowdb": "^1.0.0",
+    "matrix-bot-sdk": "^0.3.9",
+    "querystring": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/lowdb": "^1.0.9"
+  }
+}
