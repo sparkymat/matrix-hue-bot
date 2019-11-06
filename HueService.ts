@@ -27,7 +27,7 @@ class HueService {
   }
 
   public authenticate() {
-    axios.get(`/api/${this.hueUsername}/lights`).then(() => {
+    axios.get(`${this.hueBaseUrl}/api/${this.hueUsername}/lights`).then(() => {
       this.state = ServiceState.Ready;
     }).catch(error => {
       if (error.response && error.response.data && error.response.data[0].error.type === 1) {
@@ -47,7 +47,7 @@ class HueService {
   }
 
   private registerWithBridge() {
-    axios.post("/api", {devicetype: this.hueUsername}).then(response => {
+    axios.post(`${this.hueBaseUrl}/api`, {devicetype: this.hueUsername}).then(response => {
       this.hueUsername = response.data[0].success.username;
       this.db.set("hueUsername", this.hueUsername);
       this.state = ServiceState.Ready;

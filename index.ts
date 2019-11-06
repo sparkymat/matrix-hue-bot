@@ -7,13 +7,14 @@ import {
 import HueService, { ServiceState } from "./HueService";
 require("dotenv").config();
 
-const homeserverUrl = process.env.HOME_SERVER_URL || "";
+const homeServerUrl = process.env.HOME_SERVER_URL || "";
+const hueServerUrl = process.env.HUE_SERVER_URL || "";
 const accessToken = process.env.ACCESS_TOKEN || "";
 const storage = new SimpleFsStorageProvider("huebot.json");
-const hueService = new HueService("huebot.json", homeserverUrl);
+const hueService = new HueService("huebot.json", hueServerUrl);
 
 // Now we can create the client and set it up to automatically join rooms.
-const client = new MatrixClient(homeserverUrl, accessToken, storage);
+const client = new MatrixClient(homeServerUrl, accessToken, storage);
 AutojoinRoomsMixin.setupOnClient(client);
 
 client.on("room.message", handleCommand);
