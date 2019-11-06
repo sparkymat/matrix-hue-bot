@@ -4,16 +4,13 @@ import {
   AutojoinRoomsMixin,
   RichReply,
 } from "matrix-bot-sdk";
-import axios from "axios";
-import lowdb from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
+import HueService, { ServiceState } from "./HueService";
 require("dotenv").config();
 
 const homeserverUrl = process.env.HOME_SERVER_URL || "";
 const accessToken = process.env.ACCESS_TOKEN || "";
 const storage = new SimpleFsStorageProvider("huebot.json");
-const adapter = new FileSync("huebot.json");
-const db = lowdb(adapter);
+const hueService = new HueService("huebot.json", homeserverUrl);
 
 // Now we can create the client and set it up to automatically join rooms.
 const client = new MatrixClient(homeserverUrl, accessToken, storage);
@@ -47,20 +44,28 @@ async function handleCommand(roomId: string, event: any) {
   const commandLine = body.replace(/\!hue\ */, "");
   const command = commandLine.split(" ")[0];
   const args = commandLine.replace(command, "").replace(/\ */, "");
-  const username = db.get("hueUsername").value() || "huematrixbot";
 
   switch (command) {
     case "status":
       {
-        const postData = {
-          devicetype: username
-        };
+        if (hueService.state === ServiceState.Ready) {
+          respond(client, event, roomId, "Ready to go!");
+        } else {
+          respond(client, event, roomId, "Not yet authenticated");
+        }
+        break;
+      }
+    case "authenticate":
+      {
+        if (hueService.state !== ServiceState.Ready) {
+          hueService.authenticate();
+        }
 
-        axios.post("http://192.168.0.2/api/", postData).then(response => {
-          respond(client, event, roomId, JSON.stringify(response.data));
-        }).catch(error => {
-          respond(client, event, roomId, error)
-        });
+        if (hueService.state === ServiceState.Ready) {
+          respond(client, event, roomId, "Ready to go!");
+        } else {
+          respond(client, event, roomId, "Not yet authenticated");
+        }
         break;
       }
     default:
