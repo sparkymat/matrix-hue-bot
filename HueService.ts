@@ -30,6 +30,9 @@ class HueService {
     axios.get(`${this.hueBaseUrl}/api/${this.hueUsername}/lights`).then(() => {
       this.state = ServiceState.Ready;
     }).catch(error => {
+      console.log("-------------------");
+      console.log(JSON.stringify(error));
+      console.log("-------------------");
       if (error.response && error.response.data && error.response.data[0].error.type === 1) {
         this.registerWithBridge()
       }
@@ -48,6 +51,9 @@ class HueService {
 
   private registerWithBridge() {
     axios.post(`${this.hueBaseUrl}/api`, {devicetype: this.hueUsername}).then(response => {
+      console.log("-------------------");
+      console.log(response.data);
+      console.log("-------------------");
       this.hueUsername = response.data[0].success.username;
       this.db.set("hueUsername", this.hueUsername);
       this.state = ServiceState.Ready;
