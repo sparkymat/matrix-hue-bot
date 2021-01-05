@@ -7,7 +7,7 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "lowdb": "^1.0.0",
     "matrix-bot-sdk": "^0.3.9",
